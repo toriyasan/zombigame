@@ -150,7 +150,6 @@ public class Player : MonoBehaviour
             if (amoclip > 0)
             {
                 Instantiate(bulletprefabs, Pzoompoint.transform.position, transform.rotation);
-                Debug.Break();
                 amoclip--;
                 ammotext.text = amoclip + "/" + amunation;
                 AudioSource.PlayOneShot(shotse);
