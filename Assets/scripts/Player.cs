@@ -80,11 +80,10 @@ public class Player : MonoBehaviour
         Pzoompoint = bulletpoint;
         Pbulletpoint = zoompoint;
 
-
-
     }
 
     private void Update()
+
     {
         float xRot = Input.GetAxis("Mouse X") * xsensityvity;
         float yRot = Input.GetAxis("Mouse Y") * ysensityvity;
@@ -102,7 +101,6 @@ public class Player : MonoBehaviour
 
         bukichange();
 
-       
     }
 
     // プレイヤーの移動
@@ -125,6 +123,7 @@ public class Player : MonoBehaviour
         {
             cursorLock = false;
         }
+
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             cursorLock = true;
@@ -149,24 +148,21 @@ public class Player : MonoBehaviour
 
             if (amoclip > 0)
             {
-                Instantiate(bulletprefabs, Pzoompoint.transform.position, transform.rotation);
+                Instantiate(bulletprefabs, Pzoompoint.transform.position, subcamera.transform.rotation);
                 amoclip--;
                 ammotext.text = amoclip + "/" + amunation;
                 AudioSource.PlayOneShot(shotse);
                 subcamera.SetActive(true);
-                
             }
 
             else 
             {
-                Instantiate(bulletprefabs,Pbulletpoint.transform.position, transform.rotation);
+                Instantiate(bulletprefabs,Pbulletpoint.transform.position,transform.rotation);
                 amoclip--;
                 ammotext.text = amoclip + "/" + amunation;
                 AudioSource.PlayOneShot(shotse);
                 subcamera.SetActive(true);
-
             }
-
         }
 
         //リロード
@@ -231,7 +227,6 @@ public class Player : MonoBehaviour
                 Pzoompoint = bulletpoint;
                 Pbulletpoint = zoompoint;
 
-
             }
         }
 
@@ -243,12 +238,8 @@ public class Player : MonoBehaviour
                 handgun.SetActive(false);
                 asaruto.SetActive(true);
                 weponindex = 0;
-
             }
-
         }
-
-        
     }
 
     //弾薬補充
@@ -263,11 +254,9 @@ public class Player : MonoBehaviour
                 {
                     amunation = maxamunation;
                 }
-                
             }
             ammotext.text = amoclip + "/" + amunation;
-            AudioSource.PlayOneShot(maxamo);
-            
+            AudioSource.PlayOneShot(maxamo);   
         }
     }
 
