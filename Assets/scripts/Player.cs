@@ -259,11 +259,12 @@ public class Player : MonoBehaviour
                 }
             }
             ammotext.text = amoclip + "/" + amunation;
-            AudioSource.PlayOneShot(maxamo);
-            if (amoclip <=0)
+           
+            if (maxamoclip <=0)
             {
-                amoclip = 0;
+                maxamoclip = 0;
                 ammotext.text = amoclip + "/" + amunation;
+                AudioSource.PlayOneShot(maxamo);
             }
         }
     }
