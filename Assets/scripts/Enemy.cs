@@ -18,6 +18,10 @@ public class Enemy : MonoBehaviour
     Gamecontroller gamecontroller;
     //敵のプレファブ
     public GameObject enemyprefab;
+    //ゾンビ音
+    AudioSource audioSource;
+    //
+    public AudioClip zombisound;
 
    
 
@@ -30,6 +34,8 @@ public class Enemy : MonoBehaviour
         target = GameObject.Find("player");
         gamecontroller = GameObject.Find("Gamecontroller").GetComponent<Gamecontroller>();
         InvokeRepeating("enemygene", 5f, 0.5f);
+        audioSource = GetComponent<AudioSource>();
+        audioSource.PlayOneShot(zombisound, 5f);
    
     }
 

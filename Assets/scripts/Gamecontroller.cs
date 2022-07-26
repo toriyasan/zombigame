@@ -7,29 +7,31 @@ using UnityEngine.UI;
 public class Gamecontroller : MonoBehaviour
 {
     //スコアテキスト
-    public Text scoretext, timertext;
-    
+    public Text scoretext;
     //初期のスコア
     int score;
 
-    public int timecount = 10;
-  
+    //タイムテキスト
+    public Text timelabel;
+    //タイムカウント
+    public float timecount;
 
     //初期のスコア表示
     void Start()
     {
         scoretext.text = "SCORE:" + score;
-        StartCoroutine(Countdown());
-        timertext.text = timecount.ToString();
-       
+        timelabel.text = "" + timecount;
     }
 
-    
-   
     void Update()
     {
-      
-       
+        timecount -= Time.deltaTime;
+        timelabel.text = "" + timecount.ToString("0");
+        if (timecount <= 0)
+        {
+            timelabel.text = "";
+
+        }
 
     }
 
@@ -38,18 +40,8 @@ public class Gamecontroller : MonoBehaviour
     {
         score += 100;
         scoretext.text = "SCORE:" + score;
+      
 
-    }
-
-    IEnumerator Countdown()
-    {
-        while(timecount <　0)
-            {
-            yield return new WaitForSeconds(1);
-            timecount--;
-            timertext.text = timecount.ToString();
-        }
-       
     }
    
 }

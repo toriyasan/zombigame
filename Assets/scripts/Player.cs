@@ -61,7 +61,7 @@ public class Player : MonoBehaviour
     //弾薬音
     public AudioClip shotse, aiming, maxamo;
 
-    //弾薬補充
+    //弾薬補充音
     public int ammobox;
 
 
@@ -259,7 +259,12 @@ public class Player : MonoBehaviour
                 }
             }
             ammotext.text = amoclip + "/" + amunation;
-            AudioSource.PlayOneShot(maxamo);   
+            AudioSource.PlayOneShot(maxamo);
+            if (amoclip <=0)
+            {
+                amoclip = 0;
+                ammotext.text = amoclip + "/" + amunation;
+            }
         }
     }
 
