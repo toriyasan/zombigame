@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
     //弾のプレファブ
     public GameObject bulletprefabs;
 
+
     /////////アサルトライフル弾薬の発射ポイント///////////////////
     public Transform bulletpoint, zoompoint;
     /////////アサルトライフルのプライベート型の発射ポイント///////////
@@ -68,6 +69,7 @@ public class Player : MonoBehaviour
     {
         cameraRot = cam.transform.localRotation;
         characterRot = transform.localRotation;
+        
 
         //プレイヤーHP
         hpslider.value = playerHP;
@@ -191,6 +193,7 @@ public class Player : MonoBehaviour
         {
             subcamera.SetActive(false);
             maincamera.GetComponent<Camera>().enabled = true;
+            
         }
 
     }
