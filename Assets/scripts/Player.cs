@@ -9,9 +9,6 @@ public class Player : MonoBehaviour
 {
     float x, z;
 
-    //スピード
-    float speed = 0.1f;
-
     //カメラの変数
     public GameObject cam;
     Quaternion cameraRot, characterRot;
@@ -22,7 +19,7 @@ public class Player : MonoBehaviour
     //ウェポンの種類
     public int weponindex = 0;
 
-    //カメラの変数
+    //アサルトライフルカメラの変数
     public GameObject maincamera, subcamera;
 
     //マウス感度
@@ -34,7 +31,6 @@ public class Player : MonoBehaviour
     //弾のプレファブ
     public GameObject bulletprefabs;
 
-
     /////////アサルトライフル弾薬の発射ポイント///////////////////
     public Transform bulletpoint, zoompoint;
     /////////アサルトライフルのプライベート型の発射ポイント///////////
@@ -43,11 +39,11 @@ public class Player : MonoBehaviour
     //角度制限
    　float minX = -90f, maxX = 90f;
 
-   　//弾薬数
-　　　public int amunation = 50, maxamunation = 50, amoclip = 10, maxamoclip = 10;
+    //弾薬数
+    public int amunation = 50, maxamunation = 50, amoclip = 10, maxamoclip = 10;
 
-     //プレイヤーHP
-  　 int playerHP = 100, maxPlayerHP = 100;
+    //プレイヤーHP
+    int playerHP, maxPlayerHP = 100;
 
     //プレイヤーHPスライダー
     public Slider hpslider;
@@ -63,25 +59,38 @@ public class Player : MonoBehaviour
 
     //弾薬補充音
     public int ammobox;
+    //リジットボディ
+    Rigidbody rb;
+    //一時停止
+    public GameObject stopscreen;
+
+    //メッセージ表示
+    public GameObject messagebox;
+
+
+    
 
 
     private void Start()
     {
         cameraRot = cam.transform.localRotation;
         characterRot = transform.localRotation;
+
+        playerHP = maxPlayerHP;
         
-
-        //プレイヤーHP
         hpslider.value = playerHP;
-
-        //弾薬表示
+        
         ammotext.text = amoclip + "/" + amunation;
-        //音
+        
         AudioSource = GetComponent<AudioSource>();
 
         Pzoompoint = bulletpoint;
         Pbulletpoint = zoompoint;
 
+        rb = GetComponent<Rigidbody>();
+
+        Stopscreen();
+        
     }
 
     private void Update()
@@ -102,7 +111,7 @@ public class Player : MonoBehaviour
         shot();
 
         bukichange();
-
+        
     }
 
     // プレイヤーの移動
@@ -111,11 +120,15 @@ public class Player : MonoBehaviour
         x = 0;
         z = 0;
 
-        x = Input.GetAxisRaw("Horizontal");
+        x = Input.GetAxisRaw("Horizontal") * 0.5f;
 
-        z = Input.GetAxisRaw("Vertical");
+        z = Input.GetAxisRaw("Vertical") * 0.5f;
 
-        transform.position += cam.transform.forward * z + cam.transform.right * x;
+        Vector3 Move = cam.transform.forward * z + cam.transform.right * x;
+
+        Move.y = 0;
+
+        rb.position += Move;
     }
 
     //カーソルの表示。非表示
@@ -142,13 +155,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    //プレイヤーの射撃
+    //アサルトライフル射撃
     public void shot()
     {
         if (Input.GetMouseButtonDown(0))
         {
 
-            if (amoclip > 0)
+            if (subcamera.activeSelf)
             {
                 Instantiate(bulletprefabs, Pzoompoint.transform.position, subcamera.transform.rotation);
                 amoclip--;
@@ -157,9 +170,9 @@ public class Player : MonoBehaviour
                 subcamera.SetActive(true);
             }
 
-            else 
+            else
             {
-                Instantiate(bulletprefabs,Pbulletpoint.transform.position,transform.rotation);
+                Instantiate(bulletprefabs, Pbulletpoint.transform.position, transform.rotation);
                 amoclip--;
                 ammotext.text = amoclip + "/" + amunation;
                 AudioSource.PlayOneShot(shotse);
@@ -167,13 +180,15 @@ public class Player : MonoBehaviour
             }
         }
 
+
+
         //リロード
         if (Input.GetMouseButton(1))
         {
             int amontNeed = maxamoclip - amoclip;
             int amoavailable = amontNeed < amunation ? amontNeed : amunation;
 
-            if (amontNeed !=0 && amunation!=0)
+            if (amontNeed != 0 && amunation != 0)
             {
                 amunation -= amoavailable;
                 amoclip += amoavailable;
@@ -182,8 +197,8 @@ public class Player : MonoBehaviour
             }
         }
 
-        //射撃ズーム
-        if(Input.GetKey(KeyCode.B))
+        //アサルトズーム
+        if (Input.GetKey(KeyCode.B))
         {
             subcamera.SetActive(true);
             maincamera.GetComponent<Camera>().enabled = false;
@@ -193,9 +208,8 @@ public class Player : MonoBehaviour
         {
             subcamera.SetActive(false);
             maincamera.GetComponent<Camera>().enabled = true;
-            
-        }
 
+        }
     }
 
     public Quaternion clamprotation(Quaternion q)
@@ -207,7 +221,7 @@ public class Player : MonoBehaviour
 
         float angleX = Mathf.Atan(q.x) * Mathf.Rad2Deg * 2f;
 
-        angleX = Mathf.Clamp(angleX,minX,maxX);
+        angleX = Mathf.Clamp(angleX, minX, maxX);
 
         q.x = Mathf.Tan(angleX * Mathf.Deg2Rad * 0.5f);
 
@@ -218,8 +232,8 @@ public class Player : MonoBehaviour
     //武器の切り替え
     public void bukichange()
     {
-        //ウェポンアサルトライフル
-        if (weponindex　==　0)
+        //アサルトライフル
+        if (weponindex == 0)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -233,22 +247,28 @@ public class Player : MonoBehaviour
             }
         }
 
-        //ウェポンハンドガン
-        else if (weponindex　==　1)
+        //ハンドガン
+        else if (weponindex == 1)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 handgun.SetActive(false);
                 asaruto.SetActive(true);
                 weponindex = 0;
+
+                Pzoompoint = bulletpoint;
+                Pbulletpoint = zoompoint;
             }
+
+
         }
+
     }
 
     //弾薬補充
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag=="ammobox")
+        if (other.gameObject.tag == "ammobox")
         {
             if (maxamunation > amunation)
             {
@@ -257,16 +277,35 @@ public class Player : MonoBehaviour
                 {
                     amunation = maxamunation;
                 }
+
+                messagebox.SetActive(true);     
             }
+
+
             ammotext.text = amoclip + "/" + amunation;
-           
-            if (maxamoclip <=0)
+
+            if (maxamoclip <= 0)
             {
                 maxamoclip = 0;
                 ammotext.text = amoclip + "/" + amunation;
                 AudioSource.PlayOneShot(maxamo);
             }
         }
+
     }
 
+    ///ボタンを押したら一時停止したいです//////////
+    public void　Stopscreen()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            Time.timeScale = 0;
+            stopscreen.SetActive(true);
+
+        }
+
+    }
+
+    
 }
+    

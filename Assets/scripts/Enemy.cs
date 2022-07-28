@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
+
 public class Enemy : MonoBehaviour
 {
     //移動スピード
@@ -14,29 +15,19 @@ public class Enemy : MonoBehaviour
     public GameObject target;
     //エージェント
     NavMeshAgent agent;
-    //スコアの関数を使うための入れ物
+    //スコアの入れ物
     Gamecontroller gamecontroller;
     //敵のプレファブ
     public GameObject enemyprefab;
-    //ゾンビ音
-    AudioSource audioSource;
-    //
-    public AudioClip zombisound;
-
+    
    
-
- 
-
     private void Start()
     {
         anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         target = GameObject.Find("player");
         gamecontroller = GameObject.Find("Gamecontroller").GetComponent<Gamecontroller>();
-        InvokeRepeating("enemygene", 5f, 0.5f);
-        audioSource = GetComponent<AudioSource>();
-        audioSource.PlayOneShot(zombisound, 5f);
-   
+        
     }
 
     public void Update()
@@ -48,15 +39,18 @@ public class Enemy : MonoBehaviour
     //当たり判定
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag=="enemy")
+        if (other.gameObject.tag=="bullet")
         {
-            return;
+            Destroy(this.gameObject);
+            Destroy(other.gameObject);
+            gamecontroller.Addscore();
+            
+        if (other.gameObject.tag =="enemy")
+        {
+                return;
+                
+            }
         }
-        
-        Destroy(other.gameObject);
-        gamecontroller.Addscore();
-        
-        
     }
 
     //敵が生成
