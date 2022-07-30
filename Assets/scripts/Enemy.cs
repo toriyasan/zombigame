@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
     }
 
     //敵が生成
-    public void enemygene()
+    public void Enemygene()
     {
 
         Instantiate(enemyprefab,transform.position, transform.rotation);

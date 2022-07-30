@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     //マウス感度
     float xsensityvity = 3f, ysensityvity = 3f;
 
-    //カーソル
+    //カーソル表示
     bool cursorLock = true;
 
     //弾のプレファブ
@@ -59,17 +59,17 @@ public class Player : MonoBehaviour
 
     //弾薬補充音
     public int ammobox;
+
     //リジットボディ
     Rigidbody rb;
-    //一時停止
+
+    /////////一時停止////////////
     public GameObject stopscreen;
 
-    //メッセージ表示
+    ////////メッセージ表示/////////
     public GameObject messagebox;
-
-
-    
-
+    //メッセージテキスト///////////
+    public Text messagetext;
 
     private void Start()
     {
@@ -84,12 +84,13 @@ public class Player : MonoBehaviour
         
         AudioSource = GetComponent<AudioSource>();
 
+        rb = GetComponent<Rigidbody>();
+
         Pzoompoint = bulletpoint;
         Pbulletpoint = zoompoint;
 
-        rb = GetComponent<Rigidbody>();
 
-        Stopscreen();
+        StopScreen();
         
     }
 
@@ -99,18 +100,18 @@ public class Player : MonoBehaviour
         float xRot = Input.GetAxis("Mouse X") * xsensityvity;
         float yRot = Input.GetAxis("Mouse Y") * ysensityvity;
 
-        cameraRot = clamprotation(cameraRot);
+        cameraRot = Clamprotation(cameraRot);
         cameraRot *= Quaternion.Euler(-yRot, 0, 0);
         characterRot *= Quaternion.Euler(0, xRot, 0);
 
         cam.transform.localRotation = cameraRot;
         transform.localRotation = characterRot;
 
-        updatecursolock();
+        UpdateCursolock();
 
-        shot();
+        Shot();
 
-        bukichange();
+        Bukichange();
         
     }
 
@@ -132,7 +133,7 @@ public class Player : MonoBehaviour
     }
 
     //カーソルの表示。非表示
-    public void updatecursolock()
+    public void UpdateCursolock()
     {
         if (Input.GetMouseButton(1))
         {
@@ -156,7 +157,7 @@ public class Player : MonoBehaviour
     }
 
     //アサルトライフル射撃
-    public void shot()
+    public void Shot()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -179,8 +180,6 @@ public class Player : MonoBehaviour
                 subcamera.SetActive(true);
             }
         }
-
-
 
         //リロード
         if (Input.GetMouseButton(1))
@@ -212,7 +211,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public Quaternion clamprotation(Quaternion q)
+    public Quaternion Clamprotation(Quaternion q)
     {
         q.x /= q.w;
         q.y /= q.w;
@@ -230,7 +229,7 @@ public class Player : MonoBehaviour
 
 
     //武器の切り替え
-    public void bukichange()
+    public void Bukichange()
     {
         //アサルトライフル
         if (weponindex == 0)
@@ -294,11 +293,12 @@ public class Player : MonoBehaviour
 
     }
 
-    ///ボタンを押したら一時停止したいです//////////
-    public void　Stopscreen()
+    //////ボタンを押したら一時停止したいです//////////
+    public void　StopScreen()
     {
         if (Input.GetKeyDown(KeyCode.V))
         {
+            messagetext.text = "弾薬を入手した";
             Time.timeScale = 0;
             stopscreen.SetActive(true);
 

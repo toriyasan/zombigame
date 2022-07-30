@@ -31,7 +31,7 @@ public class Enemygenerator : MonoBehaviour
         timer += Time.deltaTime;
         if (timer > nextspwantime&&remeinenemy > 0)
         {
-            spwan();
+            Spwan();
             timer = 0;
             nextspwantime = Random.Range(1, 5);
             remeinenemy--;
@@ -40,7 +40,7 @@ public class Enemygenerator : MonoBehaviour
     }
 
     //敵の生成
-    public void spwan()
+    public void Spwan()
     {
         Vector3 pos = enemypoints[Random.Range(0, enemypoints.Length)].transform.position;
         Instantiate(enemyprefab, pos, transform.rotation);

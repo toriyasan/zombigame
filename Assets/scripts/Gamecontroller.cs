@@ -10,26 +10,23 @@ public class Gamecontroller : MonoBehaviour
     public Text scoretext;
     //初期のスコア
     public static int score;
-    //タイムテキスト
-    public Text timelabel;
-    //タイムカウント
-    public float timecount;
     //エネミーテキスト
     public Text enemytext;
     //エネミーの数
     public int enemycout;
 
+
+
     void Start()
     {
         scoretext.text = "SCORE:" + score;
-        timelabel.text = "" + timecount;
         enemytext.text = ""+enemytext;
         
     }
 
     void FixedUpdate()
     {
-        Countdown();
+        
         Enemycount();
 
     }
@@ -42,20 +39,6 @@ public class Gamecontroller : MonoBehaviour
       
     }
 
-    //カウントダウン
-    public void Countdown()
-    {
-        timecount -= Time.fixedDeltaTime;
-        timelabel.text = "" + timecount.ToString("0");
-        if (timecount <= 0)
-        {
-            timelabel.text = "";
-
-        }
-        
-
-    }
-
     //敵の数
     public void Enemycount()
     {
@@ -66,6 +49,4 @@ public class Gamecontroller : MonoBehaviour
         }
     }
 
-   
-   
 }

@@ -7,13 +7,13 @@ using UnityEngine.SceneManagement;
 public class Scenechange : MonoBehaviour
 {
     //メインシーンに画面切り替え
-    public void gamestart()
+    public void Gamestart()
     {
         SceneManager.LoadScene("main");
     }
 
     //ゲームクリア画面に切り替え
-    public void gameclear()
+    public void Gameclear()
     {
         SceneManager.LoadScene("CLEAR");
     }
